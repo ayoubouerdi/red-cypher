@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mm-black: #0D0D0D;
+  --color-mm-dark: #1A1A1A;
+  --color-mm-neon-red: #FF003C;
+  --color-mm-offwhite: #F8F9FA;
+  --font-mono: 'Space Grotesk', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-mm-black text-mm-offwhite font-sans antialiased overflow-x-hidden;
+    background-image: radial-gradient(circle at 50% 0%, rgba(26, 26, 26, 0.4) 0%, rgba(13, 13, 13, 1) 100%);
+    min-height: 100vh;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  a, button, [role="button"] {
+    cursor: none !important;
+  }
+}
+
+@layer utilities {
+  .glitch-hover:hover {
+    animation: glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+  }
+  
+  .glitch-continuous {
+    animation: glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  
+  .text-glow-red {
+    text-shadow: 0 0 15px rgba(255, 0, 60, 0.6);
+  }
+}
+
+@keyframes glitch-anim {
+  0% {
+    transform: translate(0)
+  }
+  20% {
+    transform: translate(-2px, 2px)
+  }
+  40% {
+    transform: translate(-2px, -2px)
+  }
+  60% {
+    transform: translate(2px, 2px)
+  }
+  80% {
+    transform: translate(2px, -2px)
+  }
+  100% {
+    transform: translate(0)
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0D0D0D; 
+}
+::-webkit-scrollbar-thumb {
+  background: #1A1A1A; 
+  border: 1px solid #333;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FF003C; 
+}
+
+/* Custom Text Selection */
+::selection {
+  background-color: rgba(255, 0, 60, 0.2);
+  color: #FF003C;
+  text-shadow: 0 0 8px rgba(255, 0, 60, 0.8);
+}
+
+::-moz-selection {
+  background-color: rgba(255, 0, 60, 0.2);
+  color: #FF003C;
+  text-shadow: 0 0 8px rgba(255, 0, 60, 0.8);
+}

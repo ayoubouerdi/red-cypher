@@ -1,0 +1,8 @@
+{
+  "name": "Red Cipher",
+  "description": "A premium, enigmatic streetwear brand web application with dark mode and mystic aesthetics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
