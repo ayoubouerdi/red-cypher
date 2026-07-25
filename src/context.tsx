@@ -30,7 +30,15 @@ interface AppContextType {
   clearCart: () => void;
   cartTotal: number;
   cartCount: number;
+
+  // Product State
+  products: Product[];
+  addProduct: (product: Product) => void;
+  addReview: (productId: string, rating: number, comment: string) => void;
+  deleteReview: (productId: string, reviewId: string) => void;
 }
+
+import { products as initialProducts } from './data';
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -43,8 +51,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const t = (key: keyof typeof dict['fr']) => dict[language][key] || key;
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  
+  const [products, setProducts] = useState<Product[]>([]);
 
-  // Load cart from local storage on mount
+  // Load cart and products from local storage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem('mm_cart');
     if (savedCart) {
@@ -54,12 +64,66 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         console.error('Failed to parse cart');
       }
     }
+
+    const savedProducts = localStorage.getItem('mm_products');
+    if (savedProducts) {
+      try {
+        setProducts(JSON.parse(savedProducts));
+      } catch (e) {
+        console.error('Failed to parse products');
+        setProducts(initialProducts);
+      }
+    } else {
+      setProducts(initialProducts);
+    }
   }, []);
 
   // Save cart to local storage when it changes
   useEffect(() => {
     localStorage.setItem('mm_cart', JSON.stringify(cartItems));
   }, [cartItems]);
+
+  // Save products to local storage when it changes
+  useEffect(() => {
+    if (products.length > 0) {
+      localStorage.setItem('mm_products', JSON.stringify(products));
+    }
+  }, [products]);
+
+  const addProduct = (product: Product) => {
+    setProducts(prev => [...prev, product]);
+  };
+
+  const addReview = (productId: string, rating: number, comment: string) => {
+    setProducts(prev => prev.map(p => {
+      if (p.id === productId) {
+        const newReview = {
+          id: `r${Date.now()}`,
+          user: 'GUEST_USER',
+          rating,
+          comment,
+          date: new Date().toISOString().split('T')[0]
+        };
+        return {
+          ...p,
+          reviews: p.reviews ? [newReview, ...p.reviews] : [newReview]
+        };
+      }
+      return p;
+    }));
+  };
+
+  const deleteReview = (productId: string, reviewId: string) => {
+    setProducts(prev => prev.map(p => {
+      if (p.id === productId) {
+        return {
+          ...p,
+          reviews: p.reviews?.filter(r => r.id !== reviewId) || []
+        };
+      }
+      return p;
+    }));
+  };
 
   const navigate = (view: ViewState['view'], productId?: string) => {
     synth.playClick();
@@ -126,7 +190,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       viewState, navigate,
       audioEnabled, setAudioEnabled,
       searchQuery, setSearchQuery,
-      cartItems, isCartOpen, openCart, closeCart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount
+      cartItems, isCartOpen, openCart, closeCart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount,
+      products, addProduct, addReview, deleteReview
     }}>
       {children}
     </AppContext.Provider>

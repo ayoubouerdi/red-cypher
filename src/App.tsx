@@ -7,6 +7,7 @@ import { HomeView } from './views/HomeView';
 import { StoreView } from './views/StoreView';
 import { ProductView } from './views/ProductView';
 import { AboutView } from './views/AboutView';
+import { AdminView } from './views/AdminView';
 import { IntroScreen } from './components/IntroScreen';
 import { CustomCursor } from './components/CustomCursor';
 import { GlitchView } from './components/GlitchView';
@@ -46,6 +47,11 @@ const AppContent: React.FC = () => {
           {viewState.view === 'about' && (
             <GlitchView viewKey="about">
               <AboutView />
+            </GlitchView>
+          )}
+          {viewState.view === 'admin' && (
+            <GlitchView viewKey="admin">
+              <AdminView />
             </GlitchView>
           )}
         </AnimatePresence>

@@ -36,7 +36,7 @@ export interface CartItem {
   quantity: number;
 }
 
-export type ViewType = 'home' | 'store' | 'product' | 'about';
+export type ViewType = 'home' | 'store' | 'product' | 'about' | 'admin';
 
 export interface ViewState {
   view: ViewType;

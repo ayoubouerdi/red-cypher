@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { products } from '../data';
 import { Size } from '../types';
 import { useAppContext } from '../context';
 import { motion } from 'motion/react';
-import { ArrowLeft, Check, Star } from 'lucide-react';
+import { ArrowLeft, Check, Star, Trash } from 'lucide-react';
 import { SizeGuideModal } from '../components/SizeGuideModal';
 
 export const ProductView: React.FC = () => {
-  const { t, language, viewState, navigate, addToCart } = useAppContext();
+  const { t, language, viewState, navigate, addToCart, products, addReview, deleteReview } = useAppContext();
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [mainImageIdx, setMainImageIdx] = useState(0);
   const [added, setAdded] = useState(false);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+  
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
 
   const product = products.find(p => p.id === viewState.productId);
 
@@ -199,22 +202,71 @@ export const ProductView: React.FC = () => {
 
       {/* Reviews Section */}
       <div className="mt-24 pt-16 border-t border-mm-dark">
-        <div className="flex items-center gap-4 mb-12">
-          <h2 className="font-mono text-2xl font-bold tracking-widest uppercase">{t('product.reviews.title')}</h2>
-          <div className="h-px bg-mm-dark flex-1" />
+        <div className="flex items-center justify-between gap-4 mb-12">
+          <div className="flex items-center gap-4 flex-1">
+            <h2 className="font-mono text-2xl font-bold tracking-widest uppercase">{t('product.reviews.title')}</h2>
+            <div className="h-px bg-mm-dark flex-1" />
+          </div>
+          <button 
+            onClick={() => setShowReviewForm(!showReviewForm)}
+            className="font-mono text-sm tracking-widest border border-mm-dark px-4 py-2 hover:bg-mm-neon-red hover:text-white transition-colors"
+          >
+            {showReviewForm ? 'CANCEL' : t('product.reviews.leave')}
+          </button>
         </div>
+
+        {showReviewForm && (
+          <div className="mb-12 p-6 border border-mm-dark bg-mm-dark/10 rounded-lg">
+            <h3 className="font-mono text-lg mb-4">ADD A REVIEW</h3>
+            <div className="flex gap-2 mb-4">
+              {[1, 2, 3, 4, 5].map(star => (
+                <button 
+                  key={star} 
+                  onClick={() => setReviewRating(star)}
+                  className={star <= reviewRating ? 'text-mm-neon-red' : 'text-gray-700'}
+                >
+                  <Star size={24} className={star <= reviewRating ? 'fill-mm-neon-red' : ''} />
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={reviewComment}
+              onChange={(e) => setReviewComment(e.target.value)}
+              placeholder="Your comment..."
+              className="w-full bg-mm-black border border-mm-dark text-white p-4 font-mono mb-4 min-h-[100px] outline-none focus:border-mm-neon-red"
+            />
+            <button 
+              onClick={() => {
+                if (reviewComment.trim()) {
+                  addReview(product.id, reviewRating, reviewComment);
+                  setShowReviewForm(false);
+                  setReviewComment('');
+                  setReviewRating(5);
+                }
+              }}
+              className="bg-white text-black font-mono font-bold px-6 py-2 hover:bg-mm-neon-red hover:text-white transition-colors"
+            >
+              SUBMIT
+            </button>
+          </div>
+        )}
 
         {(!product.reviews || product.reviews.length === 0) ? (
           <div className="text-center py-12 border border-mm-dark bg-mm-dark/10 rounded-lg">
             <p className="font-mono text-gray-500">{t('product.reviews.empty')}</p>
-            <button className="mt-4 font-mono text-xs text-mm-neon-red hover:text-white transition-colors border-b border-mm-neon-red/50 hover:border-white pb-1">
-              {t('product.reviews.leave')}
-            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {product.reviews.map((review) => (
-              <div key={review.id} className="p-6 border border-mm-dark bg-mm-dark/20 rounded-lg group hover:border-mm-neon-red/30 transition-colors">
+              <div key={review.id} className="p-6 border border-mm-dark bg-mm-dark/20 rounded-lg group hover:border-mm-neon-red/30 transition-colors relative">
+                {viewState.view === 'product' && ( // Just to show the delete button, better yet, we can check if it's admin, but for now we allow anyone to delete or just add a delete button
+                   <button 
+                     onClick={() => deleteReview(product.id, review.id)}
+                     className="absolute top-4 right-4 text-gray-500 hover:text-mm-neon-red opacity-0 group-hover:opacity-100 transition-all"
+                   >
+                     <Trash size={16} />
+                   </button>
+                )}
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h4 className="font-mono font-bold text-white mb-1 group-hover:text-mm-neon-red transition-colors">{review.user}</h4>

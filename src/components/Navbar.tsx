@@ -36,9 +36,7 @@ export const Navbar: React.FC = () => {
           className="cursor-pointer flex-1 text-center md:flex-none flex justify-center md:justify-start items-center"
           onClick={() => navigate('home')}
         >
-          <span className="font-mono text-xl md:text-2xl font-bold tracking-[0.2em] text-mm-neon-red text-glow-red glitch-hover uppercase">
-            RED CYPHER
-          </span>
+          <img src="/logo.png" alt="Red Cypher Logo" className="h-16 md:h-20 scale-[1.2] origin-left object-contain filter drop-shadow-[0_0_10px_rgba(255,0,60,0.6)]" />
         </div>
 
         {/* Desktop Nav */}
@@ -136,9 +134,7 @@ export const Navbar: React.FC = () => {
           >
             <div className="flex justify-between items-center mb-12">
               <div className="flex items-center">
-                <span className="font-mono text-2xl font-bold tracking-[0.2em] text-mm-neon-red text-glow-red glitch-hover uppercase">
-                  RED CYPHER
-                </span>
+                <img src="/logo.png" alt="Red Cypher Logo" className="h-16 scale-[1.2] origin-left object-contain filter drop-shadow-[0_0_10px_rgba(255,0,60,0.6)]" />
               </div>
               <button onClick={() => {
                 synth.playClick();

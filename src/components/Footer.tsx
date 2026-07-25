@@ -4,7 +4,7 @@ import { useAppContext } from '../context';
 import { synth } from '../audio';
 
 export const Footer: React.FC = () => {
-  const { t, audioEnabled, setAudioEnabled } = useAppContext();
+  const { t, audioEnabled, setAudioEnabled, navigate } = useAppContext();
 
   useEffect(() => {
     if (audioEnabled) {
@@ -22,9 +22,7 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
         <div className="md:col-span-2">
           <div className="mb-6">
-            <span className="font-mono text-3xl font-bold tracking-[0.2em] text-mm-neon-red text-glow-red uppercase block mb-2">
-              RED CYPHER
-            </span>
+            <img src="/logo.png" alt="Red Cypher Logo" className="h-16 scale-[1.2] origin-left object-contain filter drop-shadow-[0_0_10px_rgba(255,0,60,0.6)]" />
           </div>
           <p className="text-gray-500 max-w-sm mb-6 text-sm">
             {t('footer.desc')}
@@ -51,6 +49,7 @@ export const Footer: React.FC = () => {
             <li><a href="#" className="hover:text-white transition-colors">{t('footer.shipping')}</a></li>
             <li><a href="#" className="hover:text-white transition-colors">{t('footer.size')}</a></li>
             <li><a href="#" className="hover:text-white transition-colors">{t('footer.contact')}</a></li>
+            <li><button onClick={() => navigate('admin')} className="hover:text-white transition-colors uppercase">{t('nav.admin')}</button></li>
           </ul>
         </div>
 

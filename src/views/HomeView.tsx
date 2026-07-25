@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
-import { products } from '../data';
 import { ProductCard } from '../components/ProductCard';
 import { motion, useMotionValue, useTransform, useSpring } from 'motion/react';
 import { useAppContext } from '../context';
 import { MatrixBackground } from '../components/MatrixBackground';
 
 export const HomeView: React.FC = () => {
-  const { t, navigate } = useAppContext();
+  const { t, navigate, products } = useAppContext();
   const featuredProducts = products.filter(p => p.isNew || p.isLimited).slice(0, 4);
 
   const mouseX = useMotionValue(0);

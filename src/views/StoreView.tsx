@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { products } from '../data';
 import { ProductCard } from '../components/ProductCard';
 import { Size } from '../types';
 import { Filter, SlidersHorizontal } from 'lucide-react';
@@ -9,7 +8,7 @@ import { useAppContext } from '../context';
 type SortOption = 'new' | 'price-asc' | 'price-desc';
 
 export const StoreView: React.FC = () => {
-  const { t, language, searchQuery } = useAppContext();
+  const { t, language, searchQuery, products } = useAppContext();
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>('new');
   const [showFilters, setShowFilters] = useState(false);
